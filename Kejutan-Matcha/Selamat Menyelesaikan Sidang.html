@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Sidang Magang Matcha!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .matcha-gradient { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%); }
+        .card-shadow { box-shadow: 0 20px 40px -15px rgba(46, 125, 50, 0.2); }
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-pulse-subtle { animation: pulse-subtle 2s infinite ease-in-out; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+    </style>
+</head>
+<body class="matcha-gradient min-h-screen flex items-center justify-center p-4 overflow-x-hidden text-slate-700">
+
+    <!-- Audio lokal: file MP3 berada di folder yang sama dengan index.html -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="Thats%20The%20Way%20It%20Is.mp3" type="audio/mpeg">
+        Browser kamu tidak mendukung pemutaran audio.
+    </audio>
+
+    <!-- SCREEN 1: TAP 3 TIMES -->
+    <div id="tapScreen" class="flex flex-col items-center justify-center text-center transition-all duration-700 w-full max-w-md">
+        <div class="mb-6 animate-float">
+            <div class="w-24 h-24 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-emerald-200 text-emerald-700 text-3xl">
+                <i class="fa-solid fa-mug-hot"></i>
+            </div>
+        </div>
+        <h1 class="font-playfair text-3xl md:text-4xl font-bold text-emerald-900 mb-3">Halo! Ada Kejutan Nih 🍵</h1>
+        <p class="text-emerald-800/80 text-sm md:text-base mb-8 px-6">
+            Ketuk tombol di bawah sebanyak <span class="font-bold text-emerald-900 underline">3 kali</span> untuk membuka kartu spesialmu.
+        </p>
+        <button id="tapButton" onclick="handleTap()" class="relative group bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-4 px-8 rounded-full shadow-xl transition-all duration-300 transform active:scale-95 flex items-center gap-3 border-2 border-emerald-500/50">
+            <i class="fa-solid fa-hand-pointer text-lg animate-bounce"></i>
+            <span id="tapButtonText" class="tracking-wide text-lg">Ketuk Di Sini (0/3)</span>
+            <div class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-md" id="tapBadge">3 tersisa</div>
+        </button>
+        <p class="text-xs text-emerald-700/60 mt-6 italic">Pastikan volumenya aktif untuk pengalaman terbaik ✨</p>
+    </div>
+
+    <!-- SCREEN 2: GREETING CARD -->
+    <div id="cardScreen" class="hidden opacity-0 transform scale-95 transition-all duration-1000 w-full max-w-lg">
+        <div class="bg-white/90 backdrop-blur-xl rounded-3xl card-shadow border border-emerald-100 p-8 md:p-10 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-100 rounded-full blur-2xl opacity-70 pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-green-100 rounded-full blur-2xl opacity-70 pointer-events-none"></div>
+
+            <div class="flex justify-between items-center mb-6">
+                <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-seedling"></i> Sidang Magang Matcha
+                </span>
+                <button onclick="toggleMusic()" id="musicToggleBtn" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 p-2.5 rounded-full transition-all text-sm flex items-center gap-2 border border-emerald-200">
+                    <i id="musicIcon" class="fa-solid fa-music animate-spin"></i>
+                    <span id="musicText" class="text-xs font-medium">Musik: On</span>
+                </button>
+            </div>
+
+            <div class="text-center my-6">
+                <div class="inline-block p-4 bg-emerald-50 rounded-2xl text-emerald-700 text-4xl shadow-sm border border-emerald-100 animate-pulse-subtle">🍵✨</div>
+            </div>
+
+            <div class="text-center space-y-4 mb-8">
+                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-emerald-900 leading-snug">
+                    Selamat Menyelesaikan Sidang Magang Matcha!
+                </h2>
+                <div class="w-16 h-1 bg-emerald-300 mx-auto rounded-full my-3"></div>
+                <p class="text-slate-600 text-base md:text-lg leading-relaxed px-2 font-light">
+                    “Selamat menyelesaikan sidang magang matcha, semoga kedepannya makin lancar yaa. Proud of you<span class="text-emerald-600 font-bold">✨</span>”
+                </p>
+            </div>
+
+            <div class="bg-emerald-50/70 rounded-2xl p-4 text-center border border-emerald-100/60 mb-6">
+                <p class="text-xs text-emerald-800 font-medium">
+                    <i class="fa-solid fa-heart text-emerald-600 mr-1"></i> Terus berkarya dan sukses untuk langkah selanjutnya!
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="triggerConfetti()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-3 px-6 rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-party-horn"></i> Rayakan Lagi!
+                </button>
+                <button onclick="resetApp()" class="bg-white hover:bg-emerald-50 text-emerald-700 font-medium py-3 px-6 rounded-xl border border-emerald-200 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Ulangi Dari Awal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tapCount = 0;
+        const maxTaps = 3;
+        let isMusicPlaying = false;
+        const bgMusic = document.getElementById('bgMusic');
+
+        function handleTap() {
+            if (tapCount >= maxTaps) return;
+            tapCount++;
+            const remaining = maxTaps - tapCount;
+            const btnText = document.getElementById('tapButtonText');
+            const badge = document.getElementById('tapBadge');
+
+            if (tapCount < maxTaps) {
+                btnText.innerText = `Ketuk Di Sini (${tapCount}/${maxTaps})`;
+                badge.innerText = `${remaining} tersisa`;
+                const btn = document.getElementById('tapButton');
+                btn.classList.add('scale-95');
+                setTimeout(() => btn.classList.remove('scale-95'), 150);
+            } else {
+                triggerTransition();
+            }
+        }
+
+        function triggerTransition() {
+            playAudio();
+            const tapScreen = document.getElementById('tapScreen');
+            tapScreen.style.transition = 'all 0.5s ease-in-out';
+            tapScreen.style.opacity = '0';
+            tapScreen.style.transform = 'scale(0.9)';
+
+            setTimeout(() => {
+                tapScreen.classList.add('hidden');
+                const cardScreen = document.getElementById('cardScreen');
+                cardScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    cardScreen.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                    cardScreen.style.opacity = '1';
+                    cardScreen.style.transform = 'scale(1)';
+                    launchConfetti();
+                }, 50);
+            }, 500);
+        }
+
+        function playAudio() {
+            bgMusic.volume = 0.4;
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                updateMusicButton();
+            }).catch(error => {
+                console.log("Audio gagal diputar:", error);
+                isMusicPlaying = false;
+                updateMusicButton();
+            });
+        }
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    updateMusicButton();
+                }).catch(error => {
+                    console.log("Audio gagal diputar:", error);
+                });
+            }
+            updateMusicButton();
+        }
+
+        function updateMusicButton() {
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+            if (isMusicPlaying) {
+                icon.className = "fa-solid fa-music animate-spin";
+                text.innerText = "Musik: On";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark";
+                text.innerText = "Musik: Off";
+            }
+        }
+
+        function launchConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#2e7d32', '#4caf50', '#a5d6a7', '#ffffff', '#ffd700']
+            });
+        }
+
+        function triggerConfetti() {
+            launchConfetti();
+        }
+
+        function resetApp() {
+            tapCount = 0;
+            const cardScreen = document.getElementById('cardScreen');
+            cardScreen.style.opacity = '0';
+            cardScreen.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                cardScreen.classList.add('hidden');
+                const tapScreen = document.getElementById('tapScreen');
+                tapScreen.classList.remove('hidden');
+                tapScreen.style.opacity = '1';
+                tapScreen.style.transform = 'scale(1)';
+                document.getElementById('tapButtonText').innerText = 'Ketuk Di Sini (0/3)';
+                document.getElementById('tapBadge').innerText = '3 tersisa';
+            }, 500);
+        }
+    </script>
+</body>
+</html>
